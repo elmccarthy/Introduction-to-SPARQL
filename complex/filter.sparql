@@ -1,0 +1,8 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?person ?name
+WHERE {
+    <http://elmonline.ca/luke> foaf:knows ?person .
+    ?person foaf:name ?name .
+    FILTER regex(?name, "matt", "i")
+         # regex(?variable, regular_expression, flags)
+}

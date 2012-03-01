@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link rel="stylesheet" type="text/css" href="/style/3col-2011/all.css"/>
+	<title>SPARQL-intro: More complex SPARQL queries</title>
+	<meta name="keywords" content="RDF, SPARQL, Linked Data, Semantic Web"/>
+	<meta name="copyright" content="2012 Luke McCarthy. This work is licensed under a Creative Commons License.   http://creativecommons.org/licenses/by-sa/3.0/"/>
+</head>
+<body><div id="frame1"><div id="header"><h1>ELM online</h1></div><div id="right-column"><div id="middle-column"><div id="left-column"><div id="content">
+<h2 id="morecomplexsparqlqueries">More complex SPARQL queries</h2>
+
+<h3 id="multipleclauses">Multiple clauses</h3>
+
+<p>We can have as many clauses in a SPARQL query as we need. Every clause must be satisfied to return a result:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="mbox.sparql" title="Names and email addresses">mbox.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?name ?email
+WHERE {
+    ?person a foaf:Person .
+    ?person foaf:name ?name .
+    ?person foaf:mbox ?email .
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>---------------------------------------------------
+| name            | email                         |
+===================================================
+| "Luke McCarthy" | &lt;mailto:elmccarthy@gmail.com&gt; |
+---------------------------------------------------
+</code></pre></dd>
+</dl>
+
+
+<p>Notice that only one binding is returned, even though we know there are more people in the dataset.</p>
+
+<h3 id="optionalclauses">Optional clauses</h3>
+
+<p>We can make any clause (or group of clauses) optional:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="mbox-optional.sparql" title="Names and, optionally, email addresses">mbox-optional.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?name ?email
+WHERE {
+    ?person a foaf:Person .
+    ?person foaf:name ?name .
+    OPTIONAL {
+        ?person foaf:mbox ?email .
+    }
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>-----------------------------------------------------
+| name              | email                         |
+=====================================================
+| "Matt Links"      |                               |
+| "Mark Wilkinson"  |                               |
+| "Melanie Courtot" |                               |
+| "Luke McCarthy"   | &lt;mailto:elmccarthy@gmail.com&gt; |
+-----------------------------------------------------
+</code></pre></dd>
+</dl>
+
+
+<p>Notice that now we get a binding for every person, but some bindings have no value bound to the <code>?email</code> variable.</p>
+
+<h3 id="constructqueries">CONSTRUCT queries</h3>
+
+<p>We can use a SPARQL CONSTRUCT query to extract a subset of the RDF dataset being queried. For example, here we extract only the connections from the social network:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="construct-subset.sparql" title="A CONSTRUCT query">construct-subset.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+CONSTRUCT {
+    ?person foaf:knows ?connection .
+} WHERE {
+    ?person a foaf:Person .
+    ?person foaf:knows ?connection .
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>@prefix dc:      &lt;http://purl.org/dc/terms/&gt; .
+@prefix rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix mged:    &lt;http://mged.sourceforge.net/ontologies/MGEDOntology.owl#&gt; .
+@prefix dctype:  &lt;http://purl.org/dc/dcmitype/&gt; .
+@prefix foaf:    &lt;http://xmlns.com/foaf/0.1/&gt; .
+@prefix rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+ 
+&lt;http://www.linkedin.com/in/mcourtot&gt;
+      foaf:knows    &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; ;
+      foaf:knows    &lt;http://elmonline.ca/luke&gt; .
+ 
+&lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt;
+      foaf:knows    &lt;http://www.linkedin.com/in/mcourtot&gt; ;
+      foaf:knows    &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; ;
+      foaf:knows    &lt;http://elmonline.ca/luke&gt; .
+ 
+&lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt;
+      foaf:knows    &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; ;
+      foaf:knows    &lt;http://elmonline.ca/luke&gt; .
+ 
+&lt;http://elmonline.ca/luke&gt;
+      foaf:knows    &lt;http://www.linkedin.com/in/mcourtot&gt; ;
+      foaf:knows    &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; ;
+      foaf:knows    &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; .
+</code></pre></dd>
+</dl>
+
+
+<p>Notice that the query returned RDF, rather than variable bindings. We can, of course, use OPTIONAL and FILTER clauses with CONSTRUCT queries just as with SELECT queries.</p>
+
+<p>There is one final SPARQL query type: ASK. An ASK query simply returns true if there are any bindings that satisfy the WHERE clause, and false otherwise.</p>
+
+<h3 id="translatingrdfvocabularieswithconstructqueries">Translating RDF vocabularies with CONSTRUCT queries</h3>
+
+<p>One important use of CONSTRUCT queries is to translate RDF data from one vocabulary to another:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="construct-translate.sparql" title="A CONSTRUCT query with translation">construct-translate.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX example: &lt;http://example.com/&gt;
+CONSTRUCT {
+    ?person example:connected ?connection .
+} WHERE {
+    ?person a foaf:Person .
+    ?connection a foaf:Person .
+    {
+        ?person foaf:knows ?connection .
+    } UNION {
+        ?connection foaf:knows ?person .
+    }
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>@prefix dc:      &lt;http://purl.org/dc/terms/&gt; .
+@prefix rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix mged:    &lt;http://mged.sourceforge.net/ontologies/MGEDOntology.owl#&gt; .
+@prefix dctype:  &lt;http://purl.org/dc/dcmitype/&gt; .
+@prefix foaf:    &lt;http://xmlns.com/foaf/0.1/&gt; .
+@prefix rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix example:  &lt;http://example.com/&gt; .
+ 
+&lt;http://www.linkedin.com/in/mcourtot&gt;
+      example:connected  &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; ;
+      example:connected  &lt;http://elmonline.ca/luke&gt; .
+ 
+&lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt;
+      example:connected  &lt;http://www.linkedin.com/in/mcourtot&gt; ;
+      example:connected  &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; ;
+      example:connected  &lt;http://elmonline.ca/luke&gt; .
+ 
+&lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt;
+      example:connected  &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; ;
+      example:connected  &lt;http://elmonline.ca/luke&gt; .
+ 
+&lt;http://elmonline.ca/luke&gt;
+      example:connected  &lt;http://www.linkedin.com/in/mcourtot&gt; ;
+      example:connected  &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; ;
+      example:connected  &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; .
+</code></pre></dd>
+</dl>
+
+
+<p>Notice that we have translated the <code>foaf:knows</code> property to a property of our own devising. Also notice the UNION clause, which simply allows either graph pattern to match. In this case, we are using the UNION clause to establish an <code>example:connection</code> relationship in any case where one party knows the other. If we were using a SPARQL processor backed by an OWL reasoner, we would be able to define <code>example:connection</code> as a symmetric property and automatically the relationship in the opposite direction, but that is a topic for a different tutorial.</p>
+
+<h3 id="filters">Filters</h3>
+
+<p>SPARQL allows you to exclude variable bindings that match specified expressions through a FILTER clause. This is often used to match text against a regular expression:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="filter.sparql" title="FILTER regex()">filter.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?person ?name
+WHERE {
+    &lt;http://elmonline.ca/luke&gt; foaf:knows ?person .
+    ?person foaf:name ?name .
+    FILTER regex(?name, "matt", "i")
+         # regex(?variable, regular_expression, flags)
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>-------------------------------------------------------------------------
+| person                                                 | name         |
+=========================================================================
+| &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; | "Matt Links" |
+-------------------------------------------------------------------------
+</code></pre></dd>
+</dl>
+
+
+<p>Notice the comment that spells out the syntax of the <code>regex</code> operator. Looking at the results of the query, you might think you could match the regular expression against the <code>?person</code> variable instead of the <code>?name</code> variable, but a URI will never match a regular expression. It must first be converted to a string with the <code>str</code> operator, like so: <code>FILTER regex(str(?person), “matt”, “i”)</code>.</p>
+
+<p>There are many other operators in SPARQL. There is a long list in the <a href="http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping" title="SPARQL W3C Recommendation: operators">SPARQL W3C Recommendation</a>.</p>
+
+<h3 id="filteringboundunboundoptionalvariables">Filtering bound/unbound optional variables</h3>
+
+<p>Another common use of the FILTER clause is to test whether or not an optional variable has been bound. This occurs in several of the more baroque constructs that are required to get around the deficiencies of SPARQL 1.0. As an example, consider this query to find people I know that Melanie does not:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="filter-unbound.sparql" title="FILTER !BOUND">filter-unbound.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?person
+WHERE {
+    &lt;http://elmonline.ca/luke&gt; foaf:knows ?person .
+    OPTIONAL { 
+        &lt;http://www.linkedin.com/in/mcourtot&gt; foaf:knows ?person2 .
+        FILTER (?person = ?person2)
+    } FILTER ( !BOUND(?person2) )
+    # SPARQL 1.1 will replace this complex OPTIONAL/FILTER clause with:
+    # NOT EXISTS { &lt;http://www.linkedin.com/in/mcourtot&gt; foaf:knows ?person  . }
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>----------------------------------------------------------
+| person                                                 |
+==========================================================
+| &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; |
+| &lt;http://www.linkedin.com/in/mcourtot&gt;                  |
+----------------------------------------------------------
+</code></pre></dd>
+</dl>
+
+
+<p>Notice that the entire OPTIONAL/FILTER clause can be replaced by a SPARQL 1.1 NOT EXISTS clause. Also notice that Melanie does not know herself. This is yet another problem that could be solved by using a SPARQL processor backed by an OWL reasoner (in this case we would be able to define <code>foaf:knows</code> as a reflexive property and automatically infer that Melanie knows herself).</p>
+
+<p><a href="../first/" title="Exploring RDF data with SPARQL" class="prev">« Previous: Exploring RDF data with SPARQL «</a>
+<a href="../sparql-1.1/" title="SPARQL 1.1" class="next">» Next: SPARQL 1.1 »</a></p>
+</div><div id="left-content">
+                </div><div id="right-content">
+                </div></div></div></div><div id="footer"><p>valid <a href="http://validator.w3.org/check/referer">HTML</a>
+         and <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>.</p></div></div></body>
+</html>

@@ -1,0 +1,10 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/> 
+PREFIX mged: <http://mged.sourceforge.net/ontologies/MGEDOntology.owl#> 
+SELECT ?name ?bmi
+WHERE {
+    ?person a foaf:Person .
+    ?person foaf:name ?name .
+    ?person foaf:knows ?connection .
+    ?person mged:height ?height .
+    ?person mged:mass ?weight .
+} GROUP BY ?name ((?weight / (?height * ?height)) as ?bmi)

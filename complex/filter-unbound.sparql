@@ -1,0 +1,11 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?person
+WHERE {
+    <http://elmonline.ca/luke> foaf:knows ?person .
+    OPTIONAL { 
+        <http://www.linkedin.com/in/mcourtot> foaf:knows ?person2 .
+        FILTER (?person = ?person2)
+    } FILTER ( !BOUND(?person2) )
+    # SPARQL 1.1 will replace this complex OPTIONAL/FILTER clause with:
+    # NOT EXISTS { <http://www.linkedin.com/in/mcourtot> foaf:knows ?person  . }
+}

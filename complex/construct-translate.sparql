@@ -1,0 +1,13 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX example: <http://example.com/>
+CONSTRUCT {
+    ?person example:connected ?connection .
+} WHERE {
+    ?person a foaf:Person .
+    ?connection a foaf:Person .
+    {
+        ?person foaf:knows ?connection .
+    } UNION {
+        ?connection foaf:knows ?person .
+    }
+}

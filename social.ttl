@@ -1,0 +1,42 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix mged: <http://mged.sourceforge.net/ontologies/MGEDOntology.owl#> .
+
+<http://elmonline.ca/luke> a foaf:Person ;
+    foaf:name "Luke McCarthy" ;
+    foaf:homepage <http://elmonline.ca/> ;
+    foaf:mbox <mailto:elmccarthy@gmail.com> ;
+    foaf:knows <http://www.linkedin.com/in/mcourtot> ;
+    foaf:knows <http://www.linkedin.com/pub/mark-wilkinson/1/674/665> ;
+    foaf:knows <http://www.linkedin.com/pub/matthew-links/44/381/647> ;
+    mged:height "1.8796"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    mged:mass "92.9864359"^^<http://www.w3.org/2001/XMLSchema#double> .
+
+<http://www.linkedin.com/in/mcourtot> a foaf:Person ;
+    foaf:name "Melanie Courtot" ;
+    foaf:knows <http://elmonline.ca/luke> ;
+    foaf:knows <http://www.linkedin.com/pub/mark-wilkinson/1/674/665> .
+
+<http://www.linkedin.com/pub/mark-wilkinson/1/674/665> a foaf:Person ;
+    foaf:name "Mark Wilkinson" ;
+    foaf:knows <http://elmonline.ca/luke> ;
+    foaf:knows <http://www.linkedin.com/in/mcourtot> ;
+    foaf:knows <http://www.linkedin.com/pub/matthew-links/44/381/647> .
+
+<http://www.linkedin.com/pub/matthew-links/44/381/647> a foaf:Person ;
+    foaf:name "Matt Links" ;
+    foaf:knows <http://elmonline.ca/luke> ;
+    foaf:knows <http://www.linkedin.com/pub/mark-wilkinson/1/674/665> .
+
+<http://www.straight.com/article-215588/geek-speak-melanie-courtot-organizer-vancouver-semantic-web-meetup-group> a dctype:Text ;
+    dc:subject <http://www.linkedin.com/in/mcourtot> ;
+    dc:title "Geek Speak: Melanie Courtot, organizer of the Vancouver Semantic Web Meetup Group" .
+
+<http://www.imdb.com/name/nm0001526/>
+    foaf:name "#6" ;
+    mged:height "1.8034"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    mged:mass "73.9355563"^^<http://www.w3.org/2001/XMLSchema#double> .
+

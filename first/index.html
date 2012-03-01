@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link rel="stylesheet" type="text/css" href="/style/3col-2011/all.css"/>
+	<title>SPARQL-intro: Your first SPARQL query</title>
+	<meta name="keywords" content="RDF, SPARQL, Linked Data, Semantic Web"/>
+	<meta name="copyright" content="2012 Luke McCarthy. This work is licensed under a Creative Commons License.   http://creativecommons.org/licenses/by-sa/3.0/"/>
+</head>
+<body><div id="frame1"><div id="header"><h1>ELM online</h1></div><div id="right-column"><div id="middle-column"><div id="left-column"><div id="content">
+<h2 id="yourfirstsparqlquery">Your first SPARQL query</h2>
+
+<h3 id="simpler">The simplest possible query</h3>
+
+<p>Here is a very simple SPARQL query:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="simple.sparql" title="Simple SPARQL query">simple.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>SELECT ?person
+WHERE {
+    &lt;http://elmonline.ca/luke&gt; &lt;http://xmlns.com/foaf/0.1/knows&gt; ?person .
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>----------------------------------------------------------
+| person                                                 |
+==========================================================
+| &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; |
+| &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; |
+| &lt;http://www.linkedin.com/in/mcourtot&gt;                  |
+----------------------------------------------------------
+</code></pre></dd>
+</dl>
+
+
+<h3 id="prefixes">Prefixes</h3>
+
+<p>We can add URI prefixes to make the query easier to read:</p>
+
+<p><code>$ sparql --data <a href="../social.ttl" title="Simple social network">../social.ttl</a> --query <a href="prefix.sparql" title="Simple SPARQL query with prefixes">prefix.sparql</a></code></p>
+<dl>
+<dt>query:
+</dt>
+<dd>
+<pre><code>PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?person
+WHERE {
+    &lt;http://elmonline.ca/luke&gt; foaf:knows ?person .
+}
+</code></pre></dd>
+
+<dt>results:
+</dt>
+<dd>
+<pre><code>----------------------------------------------------------
+| person                                                 |
+==========================================================
+| &lt;http://www.linkedin.com/pub/matthew-links/44/381/647&gt; |
+| &lt;http://www.linkedin.com/pub/mark-wilkinson/1/674/665&gt; |
+| &lt;http://www.linkedin.com/in/mcourtot&gt;                  |
+----------------------------------------------------------
+</code></pre></dd>
+</dl>
+
+
+<p>But how did we know what URIs to use in our query?</p>
+
+<p><a href="../arq/" title="ARQ" class="prev">« Previous: ARQ «</a>
+<a href="../explore/" title="Exploring RDF data with SPARQL" class="next">» Next: Exploring RDF data with SPARQL »</a></p>
+</div><div id="left-content">
+                </div><div id="right-content">
+                </div></div></div></div><div id="footer"><p>valid <a href="http://validator.w3.org/check/referer">HTML</a>
+         and <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>.</p></div></div></body>
+</html>

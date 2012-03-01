@@ -1,0 +1,10 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX protein: <http://purl.uniprot.org/uniprot/>
+PREFIX go: <http://purl.uniprot.org/uniprot/go>
+PREFIX uniprot: <http://purl.uniprot.org/core/>
+SELECT ?go ?goLabel # ?goComment
+WHERE {
+    protein:P12345 uniprot:classifiedWith ?go .
+    ?go rdfs:label ?goLabel .
+#    ?go rdfs:comment ?goComment .
+}
