@@ -7,7 +7,7 @@ copyright:			2012 Luke McCarthy.
 
 # Introduction to SPARQL #
 
-[SPARQL][] is the query language for [RDF][] data in the way that SQL is the query language for traditional relational databases. This tutorial covers basic [SPARQL][] syntax as well as how to practically query local and remote [RDF][] data using the platform-independent [ARQ-home][] toolkit.
+[SPARQL][] is the query language for [RDF][] data in the way that SQL is the query language for traditional relational databases. This tutorial covers basic [SPARQL][] syntax as well as how to practically query local and remote [RDF][] data using the platform-independent [ARQ][ARQ-home] toolkit.
 
 [SPARQL]: http://www.w3.org/TR/rdf-sparql-query/
   "SPARQL Query Language for RDF"
