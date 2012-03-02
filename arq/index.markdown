@@ -34,13 +34,13 @@ Here is a snippet that can be added to your ~/.bashrc file on Linux and OS X to 
 
 ### …to query local data ###
 
-    sparql \--data DATA_FILE \--query QUERY_FILE
+    sparql --data DATA_FILE --query QUERY_FILE
 
 ### …to query remote data ###
 
-	rsparql \--service=SPARQL_ENDPOINT_URL \--query QUERY_FILE
+	rsparql --service=SPARQL_ENDPOINT_URL --query QUERY_FILE
 
-    rsparql \--service=http://beta.sparql.uniprot.org/ \--query uniprot.sparql
+    rsparql --service=http://beta.sparql.uniprot.org/ --query uniprot.sparql
 
 [« Previous: Introduction «][Intro]
 [» Next: Your first SPARQL query »][First]

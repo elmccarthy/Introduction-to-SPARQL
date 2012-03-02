@@ -1,4 +1,4 @@
-entries_in := $(wildcard *.markdown) $(wildcard */*.markdown)
+entries_in := index.markdown $(wildcard */*.markdown)
 entries_out := $(subst .markdown,.html,$(entries_in))
 
 entries: $(entries_out)
